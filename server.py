@@ -1,6 +1,7 @@
 from flask import Flask
 import json
 from about import me
+from data import mock_data 
 
 app = Flask(__name__)
 
@@ -22,5 +23,22 @@ def version():
 @app.get("/api/about")
 def about():
     return json.dumps(me)
+
+@app.get("/api/developer/name")
+def dev_name():
+    name = me["name"]
+    last = me["last_name"]
+    email = me["email"]
+    response = f"{name} {last} -- {email}"
+    return json.dumps(response)
+
+@app.get("/api/catalog")
+def get_catalog():
+    return json.dumps(mock_data)
+
+@app.get("/api/products/count")
+def products_count():
+    count = len(mock_data)
+    return json.dumps(count)
 
 app.run(debug=True)

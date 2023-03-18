@@ -10,7 +10,8 @@ deactivate
 # install flask
 py -m pip install flask
 
-
+# run the server (venv must be active)
+py server.py
 
 ====== New Project =======
 # initialize the Repo
@@ -28,8 +29,6 @@ git push -u origin main
 
 
 ====== Subsequent push ======
-git init 
-
 git add .
 git commit -m  "Something"
 
