@@ -4,6 +4,8 @@ from about import me
 
 app = Flask(__name__)
 
+############# WEB SERVER #################
+
 @app.get("/")
 def home():
     return "Hello world from a flask server"
@@ -12,7 +14,7 @@ def home():
 def test():
     return "This is a test page"
 
-############## API SERVER ##################
+############# API SERVER #################
 @app.get("/api/version")
 def version():
     return json.dumps("1.0")
