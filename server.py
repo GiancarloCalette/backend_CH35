@@ -41,4 +41,30 @@ def products_count():
     count = len(mock_data)
     return json.dumps(count)
 
+@app.get("/api/products/total")
+def sum_prices():
+    total = 0
+    for product in mock_data:
+        price = product["price"]
+        total = total + price
+
+    return json.dumps(total)
+
+@app.get("/api/categories")
+def categories():
+    cats = []
+    for product in mock_data:
+        category = product["category"]
+        if category not in cats:
+            cats.append(category)
+    return json.dumps(cats)
+
+@app.get("/api/catalog/<category>")
+def products_by_category(category):
+    results = []
+    for prod in mock_data:
+        if prod["category"].lower() == category.lower():
+            results.append(prod)
+    return json.dumps(results)
+
 app.run(debug=True)
