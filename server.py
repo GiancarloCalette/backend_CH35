@@ -67,4 +67,30 @@ def products_by_category(category):
             results.append(prod)
     return json.dumps(results)
 
+@app.get("/api/products/lower/<price>")
+def products_lower_price(price):
+    fixed_price = float(price)
+    results = []
+    for prod in mock_data:
+        if prod["price"] < fixed_price:
+            results.append(prod)
+    return json.dumps(results)
+
+@app.get("/api/products/greater/<price>")
+def products_greater_price(price):
+    fixed_price = float(price)
+    results = []
+    for prod in mock_data:
+        if prod["price"] >= fixed_price:
+            results.append(prod)
+    return json.dumps(results)
+
+@app.get("/api/products/search/<term>")
+def search_products(term):
+    results = []
+    for prod in mock_data:
+        if term.lower() in prod["title"].lower():
+            results.append(prod)
+    return json.dumps(results)
+
 app.run(debug=True)
