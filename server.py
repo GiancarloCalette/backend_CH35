@@ -1,7 +1,8 @@
-from flask import Flask
+from flask import Flask, request
 import json
 from about import me
 from data import mock_data 
+from config import db
 
 app = Flask(__name__)
 
@@ -34,7 +35,23 @@ def dev_name():
 
 @app.get("/api/catalog")
 def get_catalog():
-    return json.dumps(mock_data)
+    cursor = db.products.find({})
+    results =  []
+    for prod in cursor:
+        results.append(fix_id(prod))
+    return json.dumps(results)
+
+def fix_id(record):
+    record["_id"] = str(record["_id"])
+    return record
+
+@app.post("/api/catalog")
+def save_product():
+    product = request.get_json()
+    db.products.insert_one(product)
+    print("-----------------------")
+    print(product)
+    return json.dumps(fix_id(product))
 
 @app.get("/api/products/count")
 def products_count():
@@ -52,8 +69,9 @@ def sum_prices():
 
 @app.get("/api/categories")
 def categories():
+    cursor = db.products.find({})
     cats = []
-    for product in mock_data:
+    for product in cursor:
         category = product["category"]
         if category not in cats:
             cats.append(category)
@@ -61,10 +79,10 @@ def categories():
 
 @app.get("/api/catalog/<category>")
 def products_by_category(category):
+    cursor = db.products.find({"category": category})
     results = []
-    for prod in mock_data:
-        if prod["category"].lower() == category.lower():
-            results.append(prod)
+    for prod in cursor:
+        results.append(fix_id(prod))
     return json.dumps(results)
 
 @app.get("/api/products/lower/<price>")
@@ -91,6 +109,23 @@ def search_products(term):
     for prod in mock_data:
         if term.lower() in prod["title"].lower():
             results.append(prod)
+    return json.dumps(results)
+
+
+############# COUPON CODES #################
+
+@app.post("/api/coupons")
+def save_coupon():
+    coupon = request.get_json()
+    db.coupons.insert_one(coupon)
+    return json.dumps(fix_id(coupon))
+
+@app.get("/api/coupons")
+def get_coupons():
+    cursor = db.coupons.find({})
+    results = []
+    for coupon in cursor:
+        results.append(fix_id(coupon))
     return json.dumps(results)
 
 app.run(debug=True)
