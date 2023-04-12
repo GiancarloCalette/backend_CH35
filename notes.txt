@@ -28,7 +28,7 @@ git remote add origin <URL>
 git push -u origin main
 
 
-====== Subsequent push ======
+====== Subsequent push =======
 git add .
 git commit -m  "Something"
 
